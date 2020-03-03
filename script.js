@@ -12,9 +12,10 @@ const words = ['application', 'programming', 'interface', 'wizard'];
 // Select a random word from words array
 let selectedWord = words[Math.floor(Math.random() * words.length)];
 
-const correctWords = ['w', 'i', 'z', 'a', 'r', 'd'];
+const correctWords = [];
 const wrongWords = [];
 
+/********** FUNCTIONS **********/
 // Show hidden word
 const displayWord = () => {
   wordEl.innerHTML = `
@@ -30,6 +31,7 @@ const displayWord = () => {
       .join('')}
   `;
 
+  // Removes \n from letters with '' to have the word joined together.
   const innerWord = wordEl.innerText.replace(/\n/g, '');
 
   if (innerWord === selectedWord) {
@@ -38,4 +40,45 @@ const displayWord = () => {
   }
 };
 
+// Show notification
+const showNotification = () => {
+  notification.classList.add('show');
+
+  setTimeout(() => {
+    notification.classList.remove('show');
+  }, 2000);
+};
+
+// Update the wrong letters
+const updateWrongLettersEl = () => {
+  console.log('Update wrong');
+};
+
 displayWord();
+
+/********** EVENT LISTENERS **********/
+// Keydown letter press
+window.addEventListener('keydown', e => {
+  // Check if the key that we pressed is between a-z
+  if (e.keyCode >= 65 && e.keyCode <= 90) {
+    const letter = e.key;
+
+    if (selectedWord.includes(letter)) {
+      if (!correctWords.includes(letter)) {
+        correctWords.push(letter);
+
+        displayWord();
+      } else {
+        showNotification();
+      }
+    } else {
+      if (!wrongWords.includes(letter)) {
+        wrongWords.push(letter);
+
+        updateWrongLettersEl();
+      } else {
+        showNotification();
+      }
+    }
+  }
+});
